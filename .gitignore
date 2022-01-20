@@ -1,0 +1,9 @@
+
+# Modules
+node_modules/
+
+# Generated application
+dist/
+
+# Package
+package-lock.json
