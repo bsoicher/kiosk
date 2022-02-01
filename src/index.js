@@ -1,25 +1,30 @@
 import "./style.css";
 
-import controls from "@mediapipe/control_utils";
-import drawingUtils from "@mediapipe/drawing_utils";
+const controls = require("@mediapipe/control_utils");
+const drawingUtils = require("@mediapipe/drawing_utils");
 
 
+var posenet = require('./human')
+var ps = require('posenet-similarity')
 
 var mpPose = require("@mediapipe/pose")
 
 
-import $ from "jquery/dist/jquery.slim.min.js";
+const $ = require("jquery/dist/jquery.slim.min");
 
 
 
-var videoElement = $("<video />").attr("id", "video").appendTo("body").get(0);
-var canvasElement = $("<canvas />")
-  .attr("id", "canvas")
-  .appendTo("body")
-  .get(0);
-var controlsElement = $("<div />")
-  .addClass("control-panel")
-  .appendTo("body")
+var videoElement = $("#video").get(0)
+var canvasElement = $("#canvas").get(0)
+var controlsElement = $(".control-panel").get(0)
+
+
+var vis = $("#vis").css({
+  postion: 'absolute',
+  left: 0,
+  top: 0,
+  'font-size': '30px'
+})
   .get(0);
 
 // Our input frames will come from here.
@@ -33,6 +38,7 @@ const fpsControl = new controls.FPS();
 let activeEffect = "mask";
 
 var first = true;
+var tick = 0;
 
 function onResults(results) {
   if (first) {
@@ -110,6 +116,43 @@ function onResults(results) {
       });
     });
 
+    tick += 1
+    results.keypoints = results.poseLandmarks;
+
+
+  
+    /*
+    if (tick % 250 == 0) {
+      results = posenet(results)
+      console.log(results.posenet)
+
+      try {
+        var html = ps.poseSimilarity(pose1, results.posenet, { strategy: 'weightedDistance' }) + '<br>'
+        html += ps.poseSimilarity(pose1, results.posenet, { strategy: 'cosineDistance' }) + '<br>'
+        html += ps.poseSimilarity(pose1, results.posenet, { strategy: 'cosineSimilarity' })
+      } catch (e) {
+        console.log(e)
+      }
+      $('#vis').html(html)
+
+      pose1 = results
+    }*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     //console.log(results.poseJoints);
   }
   canvasCtx.restore();
@@ -122,7 +165,7 @@ const pose = new mpPose.Pose({
 });
 
 pose.setOptions({
-  modelComplexity: 0,
+  modelComplexity: 2,
   minDetectionConfidence: 0.5,
   minTrackingConfidence: 0.5,
 });
