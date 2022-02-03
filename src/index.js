@@ -1,10 +1,11 @@
+import human from "./human";
 import "./style.css";
 
 const controls = require("@mediapipe/control_utils");
 const drawingUtils = require("@mediapipe/drawing_utils");
 
 
-var posenet = require('./human')
+
 var ps = require('posenet-similarity')
 
 var mpPose = require("@mediapipe/pose")
@@ -35,92 +36,42 @@ const canvasCtx = canvasElement.getContext("2d");
 // call tick() each time the graph runs.
 const fpsControl = new controls.FPS();
 
-let activeEffect = "mask";
 
 var first = true;
-var tick = 0;
 
-function onResults(results) {
+
+
+const pose = new mpPose.Pose({
+  locateFile: function (file) {
+    return `pose/${file}`;
+  },
+});
+
+pose.setOptions({
+  modelComplexity: 2,
+  minDetectionConfidence: 0.5,
+  minTrackingConfidence: 0.5,
+});
+
+pose.onResults(function onResults(results) {
   if (first) {
     first = false;
     $("#loading").remove();
+    console.log(pose)
   }
 
-  // Add angle calculations
-  //results = calculateAngles(results);
 
   // Update the frame rate.
   fpsControl.tick();
   // Draw the overlays.
-  canvasCtx.save();
-  canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
-  if (results.segmentationMask) {
-    canvasCtx.drawImage(
-      results.segmentationMask,
-      0,
-      0,
-      canvasElement.width,
-      canvasElement.height
-    );
-    // Only overwrite existing pixels.
-    if (activeEffect === "mask" || activeEffect === "both") {
-      canvasCtx.globalCompositeOperation = "source-in";
-      // This can be a color or a texture or whatever...
-      canvasCtx.fillStyle = "#00FF007F";
-      canvasCtx.fillRect(0, 0, canvasElement.width, canvasElement.height);
-    } else {
-      canvasCtx.globalCompositeOperation = "source-out";
-      canvasCtx.fillStyle = "#0000FF7F";
-      canvasCtx.fillRect(0, 0, canvasElement.width, canvasElement.height);
-    }
-    // Only overwrite missing pixels.
-    canvasCtx.globalCompositeOperation = "destination-atop";
-    canvasCtx.drawImage(
-      results.image,
-      0,
-      0,
-      canvasElement.width,
-      canvasElement.height
-    );
-    canvasCtx.globalCompositeOperation = "source-over";
-  } else {
-    canvasCtx.drawImage(
-      results.image,
-      0,
-      0,
-      canvasElement.width,
-      canvasElement.height
-    );
-  }
-
-  if (results.poseLandmarks) {
-    drawingUtils.drawConnectors(
-      canvasCtx,
-      results.poseLandmarks,
-      mpPose.POSE_CONNECTIONS,
-      {
-        visibilityMin: 0.5,
-        color: "white",
-      }
-    );
-
-    Object.values(results.poseLandmarks).forEach(function (landmark) {
-      drawingUtils.drawLandmarks(canvasCtx, [landmark], {
-        visibilityMin: 0.5,
-        color: (function (v) {
-          var r = (1 - v) * 255;
-          var g = v * 255;
-
-          return "rgb(" + r + "," + g + ",0)";
-        })(landmark.visibility),
-      });
-    });
-
-    tick += 1
-    results.keypoints = results.poseLandmarks;
 
 
+
+  human.update(results)
+
+   
   
+   
     /*
     if (tick % 250 == 0) {
       results = posenet(results)
@@ -139,38 +90,7 @@ function onResults(results) {
     }*/
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    //console.log(results.poseJoints);
-  }
-  canvasCtx.restore();
-}
-
-const pose = new mpPose.Pose({
-  locateFile: function (file) {
-    return `pose/${file}`;
-  },
 });
-
-pose.setOptions({
-  modelComplexity: 2,
-  minDetectionConfidence: 0.5,
-  minTrackingConfidence: 0.5,
-});
-
-pose.onResults(onResults);
 
 // Present a control panel through which the user can manipulate the solution
 // options.
