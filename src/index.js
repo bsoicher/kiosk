@@ -4,8 +4,6 @@ import "./style.css";
 const controls = require("@mediapipe/control_utils");
 const drawingUtils = require("@mediapipe/drawing_utils");
 
-
-
 var ps = require('posenet-similarity')
 
 var mpPose = require("@mediapipe/pose")
@@ -28,9 +26,6 @@ var vis = $("#vis").css({
 })
   .get(0);
 
-// Our input frames will come from here.
-
-const canvasCtx = canvasElement.getContext("2d");
 
 // We'll add this to our control panel later, but we'll save it here so we can
 // call tick() each time the graph runs.

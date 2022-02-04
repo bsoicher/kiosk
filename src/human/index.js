@@ -1,6 +1,6 @@
 
 const pose = require("@mediapipe/pose")
-const draw = require("@mediapipe/drawing_utils")
+const draw = require("./draw")
 
 const keypoints = require("./posenet").keypoints
 
@@ -38,19 +38,15 @@ var human = window.human = module.exports = {
             this.poseLandmarks.push(this.origin())
         }
 
-        context.drawImage(this.image, 0, 0, canvas.width, canvas.height);
+        context.drawImage(this.image, 0, 0, canvas.width, canvas.height)
 
-        draw.drawConnectors(context, this.poseLandmarks, pose.POSE_CONNECTIONS, {
-            visibilityMin: 0.5,
-            color: "white",
-        })
+        draw.drawConnectors(context, this.poseLandmarks, pose.POSE_CONNECTIONS, { color: "white" })
+        draw.drawLandmarks(context, this.poseLandmarks, { color: "#0f0", radius: 5 })
+        draw.drawLandmarksData(context, this.poseLandmarks)
 
-        draw.drawLandmarks(context, this.poseLandmarks, {
-            visibilityMin: 0.5,
-            color: "#0f0",
-        })
+        draw.stats(context, this.poseLandmarks)
 
-        this.box()
+        //draw.drawBounds(context, this.poseLandmarks)
 
         return this
     },
@@ -62,8 +58,8 @@ var human = window.human = module.exports = {
     showOrigin: true,
 
     /**
-     * Generate an origin landmark
-     * @returns {Object}
+     * Calculate origin landmark
+     * @returns {NormalizedLandmark}
      */
     origin: function () {
         if (!this.poseLandmarks) {
@@ -81,36 +77,6 @@ var human = window.human = module.exports = {
         }
     },
 
-    /**
-     * Draw bounds box
-     * @returns {NormalizedRect}
-     */
-    box: function () {
-        var x = { max: -1, min: 1 }
-        var y = { max: -1, min: 1 }
-
-        this.poseLandmarks.forEach(function (p) {
-            if (p.visibility > .5) {
-                if (p.y > y.max) { y.max = p.y }
-                else if (p.y < y.min) { y.min = p.y }
-                if (p.x > x.max) { x.max = p.x }
-                else if (p.x < x.min) { x.min = p.x }
-            }
-        })
-
-        draw.drawRectangle(context, {
-            xCenter: (x.max + x.min) / 2,
-            yCenter: (y.max + y.min) / 2,
-            height: y.max - y.min,
-            width: x.max - x.min,
-            rotation: 0,
-            rectId: 1
-        }, {
-            color: 'orange',
-            fillColor: 'rgba(0,0,0,0)'
-        })
-    },
-
     log: function () {
         if (!this.poseLandmarks) {
             throw new Error('Missing results object')
@@ -122,6 +88,34 @@ var human = window.human = module.exports = {
         })
 
         console.log(obj)
+    },
+
+    heuristics: function () {
+        var c = []
+
+        var data = pose.POSE_CONNECTIONS.map(function (l) {
+
+            if (c[l[0]]) {
+                c[l[0]].push(l[1])
+            } else {
+                c[l[0]] = [l[1]]
+            }
+
+            var a = human.poseLandmarks[l[0]]
+            var b = human.poseLandmarks[l[1]]
+
+            var dx = b.x - a.x
+            var dy = b.y - a.y
+
+            return (Math.atan2(dy, dx) * 180) / Math.PI - 90
+        })
+
+        c.forEach(function(v){
+            if (v.length === 2) {
+                console.log('angle')
+            }
+        })
+
     }
 
 }
