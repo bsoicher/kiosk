@@ -4,23 +4,21 @@
 const draw = module.exports = require("@mediapipe/drawing_utils")
 
 // Setup canvas element & context
-const context = document.getElementsByTagName("canvas")[0].getContext("2d")
-
+draw.context = document.getElementsByTagName("canvas")[0].getContext("2d")
 
 /**
  * Draw a Bounds box around landmarks
- * @param {CanvasRenderingContext2D} ctx
  * @param {NormalizedLandmarkList} landmarks
  * @param {DrawingOptions} style
  */
-draw.drawBounds = function (ctx, landmarks, style) {
+draw.drawBounds = function (landmarks, style) {
     var min = { x: 1, y: 1 }
     var max = { x: -1, y: -1 }
 
     // Default options
     style = Object.assign({
-        color: 'orange',
-        fillColor: 'rgba(255,255,255,0)',
+        color: "orange",
+        fillColor: "rgba(255,255,255,0)",
         visibilityMin: .5,
     }, style)
 
@@ -34,7 +32,7 @@ draw.drawBounds = function (ctx, landmarks, style) {
         }
     })
 
-    this.drawRectangle(ctx, {
+    this.drawRectangle(this.context, {
         xCenter: (max.x + min.x) / 2,
         yCenter: (max.y + min.y) / 2,
         height: max.y - min.y,
@@ -46,16 +44,15 @@ draw.drawBounds = function (ctx, landmarks, style) {
 
 /**
  * Draw landmarks debug
- * @param {CanvasRenderingContext2D} ctx
  * @param {NormalizedLandmarkList} landmarks
  * @param {DrawingOptions} style
  */
-draw.drawLandmarksData = function (ctx, landmarks, style) {
-    var e = ctx.canvas
+draw.drawLandmarksData = function (landmarks, style) {
+    var e = this.context.canvas
 
     // Default options
     style = Object.assign({
-        color: 'white',
+        color: "white",
         visibilityMin: .5,
         font: "20px Courier New",
         data: "position"
@@ -63,8 +60,8 @@ draw.drawLandmarksData = function (ctx, landmarks, style) {
 
     ctx.font = style.font
     ctx.fillStyle = style.color
-    ctx.textAlign = 'center'
-    ctx.textBaseline = 'middle'
+    ctx.textAlign = "center"
+    ctx.textBaseline = "middle"
 
     landmarks.forEach(function (p) {
         if (p.visibility > style.visibilityMin) {
@@ -75,24 +72,23 @@ draw.drawLandmarksData = function (ctx, landmarks, style) {
 
 /**
  * Draw landmarks debug
- * @param {CanvasRenderingContext2D} ctx
  * @param {NormalizedLandmarkList} landmarks
  * @param {DrawingOptions} style
  */
-draw.stats = function (ctx, landmarks, style) {
-    var e = ctx.canvas
+draw.stats = function (landmarks, style) {
+    var e = this.context.canvas
 
     // Default options
     style = Object.assign({
-        color: 'green',
+        color: "green",
         visibilityMin: .5,
         font: "25px Courier New",
     }, style)
 
     ctx.font = style.font
     ctx.fillStyle = style.color
-    ctx.textAlign = 'left'
-    ctx.textBaseline = 'middle'
+    ctx.textAlign = "left"
+    ctx.textBaseline = "middle"
 
     var stats = {
         landmarksVisible: 0,
@@ -108,8 +104,6 @@ draw.stats = function (ctx, landmarks, style) {
        // averageVisibily.push(p.visibility)
     })
 
-
-
     var point = { x: 10, y: 20 }
 
     Object.keys(stats).forEach(function (key) {
@@ -118,9 +112,4 @@ draw.stats = function (ctx, landmarks, style) {
     })
 
 
-}
-
-function arrayAverage(arr) {
-    let total = arr.reduce(function (a, b) { return a + b }, 0)
-    return total / arr.length
 }

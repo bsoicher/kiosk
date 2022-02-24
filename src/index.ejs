@@ -4,6 +4,7 @@
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><%= htmlWebpackPlugin.options.title %></title>
+    <link href="https://www.canada.ca/etc/designs/canada/wet-boew/assets/favicon.ico" rel="icon" type="image/x-icon"/>
   </head>
   <body>
     <nav id="nav-top" class="navbar fixed-top navbar-dark bg-dark">
@@ -14,25 +15,11 @@
 
     <div class="container-fluid">
       <div class="row">
-        <div class="col-2 p-0">
-          <h2>Sidebar</h2>
-         
-          Something
-          <div class="progress" style="height: 70px;">
-            <div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">0:29</div>
-          </div>
-
-        </div>
-        <div class="col-10 p-0">
-          <video id="video"></video>
+        <div class="col">
           <canvas id="canvas"></canvas>
-          <div class="control-panel"></div>
-          <div id="vis"></div>
         </div>
-     
       </div>
-
-
+    </div>
   
   </body>
 </html>

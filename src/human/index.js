@@ -1,14 +1,15 @@
 
-const pose = require("@mediapipe/pose")
-const draw = require("./draw")
-
-const keypoints = require("./posenet").keypoints
+const pose = require("../pose")
+const draw = require("../draw")
+const util = require("../math")
 
 // Setup canvas element & context
 const canvas = document.getElementsByTagName("canvas")[0]
 if (!canvas) { throw new Error("canvas element not found") }
-
 const context = canvas.getContext("2d")
+
+
+
 
 
 var human = window.human = module.exports = {
@@ -42,9 +43,9 @@ var human = window.human = module.exports = {
 
         draw.drawConnectors(context, this.poseLandmarks, pose.POSE_CONNECTIONS, { color: "white" })
         draw.drawLandmarks(context, this.poseLandmarks, { color: "#0f0", radius: 5 })
-        draw.drawLandmarksData(context, this.poseLandmarks)
+        //draw.drawLandmarksData(this.poseLandmarks)
 
-        draw.stats(context, this.poseLandmarks)
+        //draw.stats(this.poseLandmarks)
 
         //draw.drawBounds(context, this.poseLandmarks)
 
@@ -91,29 +92,15 @@ var human = window.human = module.exports = {
     },
 
     heuristics: function () {
-        var c = []
+      
+        Object.keys(pose.POSE_HEURISTICS).forEach(function(key){
+            var i = pose.POSE_HEURISTICS[key]
 
-        var data = pose.POSE_CONNECTIONS.map(function (l) {
+            var a = human.poseLandmarks[i[0]]
+            var b = human.poseLandmarks[i[1]]
+            var c = human.poseLandmarks[i[2]]
 
-            if (c[l[0]]) {
-                c[l[0]].push(l[1])
-            } else {
-                c[l[0]] = [l[1]]
-            }
-
-            var a = human.poseLandmarks[l[0]]
-            var b = human.poseLandmarks[l[1]]
-
-            var dx = b.x - a.x
-            var dy = b.y - a.y
-
-            return (Math.atan2(dy, dx) * 180) / Math.PI - 90
-        })
-
-        c.forEach(function(v){
-            if (v.length === 2) {
-                console.log('angle')
-            }
+            console.log(key, util.getAngle(a,b,c))
         })
 
     }

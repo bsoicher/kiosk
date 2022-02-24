@@ -3,7 +3,7 @@
 
 body {
   background-color: #fff;
-  margin-top:75px;
+  padding-top:75px;
 }
 
 #nav-top {
@@ -12,17 +12,18 @@ body {
   background: -webkit-linear-gradient(left, #000, 0%, #1c639b, 100%);
 }
 
-#video {
+#camera {
   display: none;
 }
 
 #canvas {
+  margin-top:12px;
   width: 70%;
 }
 
-.control-panel {
+#controls {
   position: absolute;
   right: 10px;
-  top: 60px;
+  top: 100px;
   color: #fff;
 }

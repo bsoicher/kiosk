@@ -9,7 +9,7 @@ module.exports = {
   entry: "./src/index.js",
   plugins: [
     new HtmlPlugin({
-      title: "CAF Fitness Kiosk",
+      title: "CAF Fitness Kiosk Demo",
       template: './src/index.ejs',
     }),
     new CopyPlugin({
