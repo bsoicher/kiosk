@@ -1,0 +1,22 @@
+{
+    "name": "Squat",
+    "points": [
+        11,
+        12,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28
+    ],
+    "joints": [
+        {
+            "index": 5,
+            "angle": 90,
+            "accuracy": 3,
+            "silver": 5,
+            "bronze": 10
+        }
+    ]
+}

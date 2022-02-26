@@ -1,5 +1,10 @@
 
 
 ## Requirements
-nodejs
-webpack
+- nodejs
+- webpack
+
+## Installation
+
+    npm install
+    npm run start

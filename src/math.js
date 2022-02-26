@@ -1,8 +1,9 @@
 /**
  * Math functions
  */
+const pose = require('@mediapipe/pose')
 
-module.exports = {
+let math = {
 
     /**
      * Angle of 3 landmarks
@@ -12,7 +13,7 @@ module.exports = {
      * @returns {number}
      */
     angle: function (a, b, c) {
-        var deg = this.degrees(math.atan2(c.y - b.y, c.x - b.x) - math.atan2(a.y - b.y, a.x - b.x))
+        var deg = this.degrees(Math.atan2(c.y - b.y, c.x - b.x) - Math.atan2(a.y - b.y, a.x - b.x))
 
         if (deg < 0) {
             deg += 360
@@ -72,6 +73,27 @@ module.exports = {
      */
     distance: function (a, b) {
         return Math.sqrt((Math.pow(b.x - a.x, 2)) + (Math.pow(b.y - a.y, 2)))
-    }
+    },
+
+    /**
+     * Calculate origin landmark
+     * @param {NormalizedLandmarkList} landmarks 
+     * @returns {NormalizedLandmark}
+     */
+    origin: function(landmarks) {
+        var l = landmarks[pose.POSE_LANDMARKS.LEFT_HIP]
+        var r = landmarks[pose.POSE_LANDMARKS.RIGHT_HIP]
+
+        return {
+            x: (l.x + r.x) / 2,
+            y: (l.y + r.y) / 2,
+            z: (l.z + r.z) / 2,
+            visibility: (l.visibility + r.visibility) / 2
+        }
+    },
 
 }
+
+// Expose object
+window.math = math
+module.exports = math
