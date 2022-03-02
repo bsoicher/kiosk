@@ -20,6 +20,6 @@ console.log(`Server running on port ${port}`);
 open(`http://localhost:${port}`, {
   app: {
     name: "firefox",
-    arguments: ["--kiosk"]
+    //arguments: ["--kiosk"]
   }
 });
