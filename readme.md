@@ -6,11 +6,11 @@
 
 ## Installation
 
-        cd Desktop
-        git clone https://github.com/bsoicher/kiosk.git kiosk
-        cd kiosk
+    cd Desktop
+    git clone https://github.com/bsoicher/kiosk.git kiosk
+    cd kiosk
 
-        npm install
-        npm run build
+    npm install
+    npm run build
 
-        node server.js
+    node server.js
