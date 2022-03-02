@@ -28,6 +28,17 @@ let math = {
     },
 
     /**
+     * Angle of 3 landmarks
+     * @param {NormalizedLandmark} a
+     * @param {NormalizedLandmark} b
+     * @param {NormalizedLandmark} c
+     * @returns {number}
+     */
+    angle3d: function(a, b, c) {
+        
+    },
+
+    /**
      * Get min/max of landmarks
      * @param {NormalizedLandmarkList} landmarks
      * @returns {Array}

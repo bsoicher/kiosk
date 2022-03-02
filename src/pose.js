@@ -2,7 +2,8 @@
  * Extends MediaPipe pose
  */
 const pose = require("@mediapipe/pose")
-const math = require('./math')
+const canvas = require("./canvas")
+const math = require("./math")
 
 /**
  * Latest landmark results
@@ -50,14 +51,20 @@ pose.instance.onResults(function (results) {
         }))
     })
 
-    pose.results = results
-    canvas.ctx.drawImage(pose.results.image, 0, 0, canvas.canvas.width, canvas.canvas.height)
 
-    canvas.drawConnectors()
-    canvas.drawState()
+
+    pose.results = results
+    canvas.drawImage(results.image)
+
+    canvas.drawConnectors(results, pose.POSE_CONNECTIONS)
+    canvas.drawState(results)
     //canvas.drawBounds()
 
+    //canvas.drawText(['test1', 'test2' ])
 
+    if (typeof pose.gridUpdate === 'function') {
+        pose.gridUpdate(reults)
+    }
 
 
 })
@@ -77,6 +84,13 @@ pose.asLandmarks = function (list) {
     })
 }
 
+/**
+ * Map landmark array
+ * @param {*} fn 
+ */
+pose.mapLandmarks = function (fn) {
+    this.results.poseLandmarks.map(fn)
+}
 
 
 /**
@@ -107,7 +121,6 @@ pose.getLandmark = function (id) {
 pose.getLandmarks = function (ids) {
     return ids.map(this.getLandmark)
 }
-
 
 
 

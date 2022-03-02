@@ -1,10 +1,16 @@
 
 
 ## Requirements
-- nodejs
-- webpack
+- [git](https://git-scm.com/)
+- [nodejs](https://nodejs.org/)
 
 ## Installation
 
-    npm install
-    npm run start
+        cd Desktop
+        git clone https://github.com/bsoicher/kiosk.git kiosk
+        cd kiosk
+
+        npm install
+        npm run build
+
+        node server.js

@@ -5,21 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><%= htmlWebpackPlugin.options.title %></title>
     <link href="https://www.canada.ca/etc/designs/canada/wet-boew/assets/favicon.ico" rel="icon" type="image/x-icon"/>
+
   </head>
   <body>
+
     <nav id="nav-top" class="navbar fixed-top navbar-dark bg-dark">
       <div class="container-fluid">
         <span class="navbar-brand fs-2"><%= htmlWebpackPlugin.options.title %></span>
       </div>
     </nav>
 
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col">
-          <canvas id="canvas"></canvas>
-        </div>
-      </div>
-    </div>
-  
+    <canvas id="canvas"></canvas>
+
   </body>
 </html>

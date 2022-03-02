@@ -3,7 +3,6 @@
  */
 
 const draw = require("@mediapipe/drawing_utils")
-const pose = require('./pose')
 const math = require('./math')
 
 // Find element
@@ -17,7 +16,7 @@ var canvas = {
      * Draw a Bounds box around landmarks
      * @param {DrawingOptions} style
      */
-    drawBounds: function (style) {
+    drawBounds: function (results, style) {
         var min = { x: 1, y: 1 }
         var max = { x: -1, y: -1 }
 
@@ -29,7 +28,7 @@ var canvas = {
         }, style)
 
         // Determine boundaries
-        pose.results.poseLandmarks.forEach(function (p) {
+        results.poseLandmarks.forEach(function (p) {
             if (p.visibility > style.visibilityMin) {
                 if (p.x > max.x) { max.x = p.x }
                 else if (p.x < min.x) { min.x = p.x }
@@ -48,8 +47,8 @@ var canvas = {
         }, style)
     },
 
-    drawOrigin: function () {
-        var o = math.origin(pose.results.poseLandmarks)
+    drawOrigin: function (results) {
+        var o = math.origin(results.poseLandmarks)
         draw.drawLandmarks(this.ctx, [o], {
             color: 'rgba(255,0,0,1)',
             fillColor: 'transparent',
@@ -63,7 +62,7 @@ var canvas = {
      * @param {NormalizedLandmarkList|NormalizedLandmark} landmarks 
      * @param {DrawingOptions} style 
      */
-    drawLandmarks: function (style) {
+    drawLandmarks: function (results, style) {
       
         // Default style
         style = Object.assign({
@@ -71,28 +70,32 @@ var canvas = {
             fillColor: "rgba(255,255,255,.25)"
         }, style)
 
-        pose.results.poseLandmarks.forEach(function (landmark) {
+        results.poseLandmarks.forEach(function (landmark) {
             draw.drawLandmarks(canvas.ctx, [landmark], landmark.style || style)
         })
     },
 
-    drawConnectors: function (style) {
+    drawConnectors: function (results, connections, style) {
 
         // Default style
         style = Object.assign({
             color: "rgba(255,255,255,.5)",
         }, style)
 
-        draw.drawConnectors(this.ctx, pose.results.poseLandmarks, pose.POSE_CONNECTIONS, style)
+        draw.drawConnectors(this.ctx, results.poseLandmarks, connections, style)
     },
 
-    drawState: function (landmarks) {
+    drawState: function (results) {
 
         state = {
             "name": "T",
             "joints": [
-                [0, 180],
-                [7, 180],
+                [5, 90],
+                [12, 90],
+                [2, 180],
+                [9, 180],
+                [0, 90],
+                [7, 90]
             ]
         }
 
@@ -101,34 +104,59 @@ var canvas = {
             used.push.apply(used, pose.POSE_HEURISTICS[joint[0]])
         })
 
-        pose.results.poseLandmarks = pose.results.poseLandmarks.map(function(landmark, index){
+        results.poseLandmarks = results.poseLandmarks.map(function(landmark, index){
             if (!used.includes(index)) {
                 landmark.style = {
-                    color: "rgba(255,255,255,.25)"
+                    //color: "rgba(255,255,255,.25)",
+                    fillColor: "rgba(255,255,255,.25)",
                 }
             }
             return landmark
         })
 
         state.joints.forEach(function(joint) {
-            var angle = pose.results.heuristics[joint[0]]
+            var angle = results.heuristics[joint[0]]
             var landmark = pose.POSE_HEURISTICS[joint[0]][1]
-
             var distance = joint[1] - angle
             
-          
-            pose.results.poseLandmarks[landmark].style = {
+            results.poseLandmarks[landmark].style = {
                 color: canvas.color(distance),
                 radius: 15,
 
             }
-          
-
         })
 
-       
+        this.drawLandmarks(results)
 
-        this.drawLandmarks()
+    },
+
+    /**
+     * Array of text to be printed
+     * @param {any} text
+     */
+    drawText: function(text) {
+        if (!Array.isArray(text)) {
+            text = [text]
+        }
+
+        this.ctx.font = "25px Courier New"
+        this.ctx.fillStyle = "white"
+        this.ctx.textAlign = "center"
+        this.ctx.textBaseline = "middle"
+
+        let p = { x: 50, y: 100 }
+
+        text.forEach(function (t) {
+            canvas.ctx.fillText(t, p.x, p.y)
+            p.y += 22
+        })
+    },
+
+    drawImage: function(img) {
+        this.ctx.drawImage(img, 0, 0, this.canvas.width, this.canvas.height)
+    },
+
+    drawStats: function() {
 
     },
 
@@ -149,7 +177,7 @@ var canvas = {
         let hue = ((1-percent)*120).toString(10)
 
         return `hsl(${hue},100%,50%)`
-    }
+    },
 }
 
 
