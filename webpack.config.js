@@ -12,6 +12,11 @@ module.exports = {
       title: "CAF Fitness Kiosk Demo",
       template: './src/index.ejs',
     }),
+    new HtmlPlugin({ 
+      template: './src/debug.html',
+      filename: 'debug.html',
+      inject: false
+    }),
     new CopyPlugin({
       patterns: [{ from: "node_modules/@mediapipe/pose", to: "pose" }],
     }),
