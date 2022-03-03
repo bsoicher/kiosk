@@ -13,3 +13,10 @@
     npm install
     npm run build
     npm run start
+
+## Updating
+
+    git pull
+    npm update
+    npm run build
+    npm run start
