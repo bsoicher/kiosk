@@ -6,7 +6,7 @@ const canvas = require("./canvas")
 const pose = require("./pose")
 
 // Camera size
-const size = { width: 1280, height: 720 }
+const size = { width: 1920, height: 1080 }
 
 // Create element
 const el = document.createElement("video")
