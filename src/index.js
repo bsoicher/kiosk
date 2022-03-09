@@ -4,6 +4,9 @@
 require("./style.css")
 
 require("./camera")
+
+
+
 require("./canvas")
 
 

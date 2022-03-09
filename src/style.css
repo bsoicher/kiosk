@@ -17,13 +17,15 @@ body {
 
 #camera {
   display: none;
+  transform-origin: left bottom;
   transform: rotate(90deg);
 }
 
 #canvas {
   position:absolute;
   left:0;
-  top:0;
+  top:-1080px;
+  transform-origin: left bottom;
   transform: rotate(90deg)
 }
 

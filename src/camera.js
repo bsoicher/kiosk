@@ -1,11 +1,12 @@
 /**
  * Webcam setup
  */
+
 const Camera = require("@mediapipe/camera_utils").Camera
+
 const canvas = require("./canvas")
 const pose = require("./pose")
 
-// Camera size
 const size = { width: 1920, height: 1080 }
 
 // Create element
@@ -31,5 +32,5 @@ canvas.canvas.height = size.height
 camera.start()
 
 // Expose object
-window.camera = camera
-module.exports = camera
+window.Camera = Camera
+module.exports = Camera
