@@ -12,7 +12,7 @@ module.exports = {
       title: "CAF Fitness Kiosk Demo",
       template: './src/index.ejs',
     }),
-    new HtmlPlugin({ 
+    new HtmlPlugin({
       template: './src/debug.html',
       filename: 'debug.html',
       inject: false
